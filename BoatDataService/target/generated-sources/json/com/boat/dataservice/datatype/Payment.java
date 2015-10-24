@@ -22,8 +22,8 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Generated("org.jsonschema2pojo")
 @JsonPropertyOrder({
-    "customer_account_id",
-    "customer_token",
+    "bt_customer_id",
+    "payment_method_token",
     "sub_merchant_id",
     "amount",
     "service_fee",
@@ -35,17 +35,17 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 public class Payment {
 
     /**
-     * customer account id from brain tree
+     * customer id from brain tree
      * 
      */
-    @JsonProperty("customer_account_id")
-    private String customerAccountId;
+    @JsonProperty("bt_customer_id")
+    private String btCustomerId;
     /**
      * customer token that came back from brain tree
      * 
      */
-    @JsonProperty("customer_token")
-    private String customerToken;
+    @JsonProperty("payment_method_token")
+    private String paymentMethodToken;
     /**
      * brain tree merchant ID - sub merchant ID
      * 
@@ -92,29 +92,29 @@ public class Payment {
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     /**
-     * customer account id from brain tree
+     * customer id from brain tree
      * 
      * @return
-     *     The customerAccountId
+     *     The btCustomerId
      */
-    @JsonProperty("customer_account_id")
-    public String getCustomerAccountId() {
-        return customerAccountId;
+    @JsonProperty("bt_customer_id")
+    public String getBtCustomerId() {
+        return btCustomerId;
     }
 
     /**
-     * customer account id from brain tree
+     * customer id from brain tree
      * 
-     * @param customerAccountId
-     *     The customer_account_id
+     * @param btCustomerId
+     *     The bt_customer_id
      */
-    @JsonProperty("customer_account_id")
-    public void setCustomerAccountId(String customerAccountId) {
-        this.customerAccountId = customerAccountId;
+    @JsonProperty("bt_customer_id")
+    public void setBtCustomerId(String btCustomerId) {
+        this.btCustomerId = btCustomerId;
     }
 
-    public Payment withCustomerAccountId(String customerAccountId) {
-        this.customerAccountId = customerAccountId;
+    public Payment withBtCustomerId(String btCustomerId) {
+        this.btCustomerId = btCustomerId;
         return this;
     }
 
@@ -122,26 +122,26 @@ public class Payment {
      * customer token that came back from brain tree
      * 
      * @return
-     *     The customerToken
+     *     The paymentMethodToken
      */
-    @JsonProperty("customer_token")
-    public String getCustomerToken() {
-        return customerToken;
+    @JsonProperty("payment_method_token")
+    public String getPaymentMethodToken() {
+        return paymentMethodToken;
     }
 
     /**
      * customer token that came back from brain tree
      * 
-     * @param customerToken
-     *     The customer_token
+     * @param paymentMethodToken
+     *     The payment_method_token
      */
-    @JsonProperty("customer_token")
-    public void setCustomerToken(String customerToken) {
-        this.customerToken = customerToken;
+    @JsonProperty("payment_method_token")
+    public void setPaymentMethodToken(String paymentMethodToken) {
+        this.paymentMethodToken = paymentMethodToken;
     }
 
-    public Payment withCustomerToken(String customerToken) {
-        this.customerToken = customerToken;
+    public Payment withPaymentMethodToken(String paymentMethodToken) {
+        this.paymentMethodToken = paymentMethodToken;
         return this;
     }
 
@@ -356,7 +356,7 @@ public class Payment {
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder().append(customerAccountId).append(customerToken).append(subMerchantId).append(amount).append(serviceFee).append(paymentId).append(responseDescription).append(responseAuthorizationCode).append(settlementBatchId).append(additionalProperties).toHashCode();
+        return new HashCodeBuilder().append(btCustomerId).append(paymentMethodToken).append(subMerchantId).append(amount).append(serviceFee).append(paymentId).append(responseDescription).append(responseAuthorizationCode).append(settlementBatchId).append(additionalProperties).toHashCode();
     }
 
     @Override
@@ -368,7 +368,7 @@ public class Payment {
             return false;
         }
         Payment rhs = ((Payment) other);
-        return new EqualsBuilder().append(customerAccountId, rhs.customerAccountId).append(customerToken, rhs.customerToken).append(subMerchantId, rhs.subMerchantId).append(amount, rhs.amount).append(serviceFee, rhs.serviceFee).append(paymentId, rhs.paymentId).append(responseDescription, rhs.responseDescription).append(responseAuthorizationCode, rhs.responseAuthorizationCode).append(settlementBatchId, rhs.settlementBatchId).append(additionalProperties, rhs.additionalProperties).isEquals();
+        return new EqualsBuilder().append(btCustomerId, rhs.btCustomerId).append(paymentMethodToken, rhs.paymentMethodToken).append(subMerchantId, rhs.subMerchantId).append(amount, rhs.amount).append(serviceFee, rhs.serviceFee).append(paymentId, rhs.paymentId).append(responseDescription, rhs.responseDescription).append(responseAuthorizationCode, rhs.responseAuthorizationCode).append(settlementBatchId, rhs.settlementBatchId).append(additionalProperties, rhs.additionalProperties).isEquals();
     }
 
 }

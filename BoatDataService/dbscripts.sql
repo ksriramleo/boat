@@ -38,7 +38,7 @@ create table transaction (
 
  -- Customer Table
 
- create table CUSTOMER (
+ create table customer (
   CUSTOMER_ID int(11) unsigned zerofill not null auto_increment primary key,
   BT_CUSTOMER_ID varchar(255),
   PAYMENT_METHOD_TOKEN varchar(255)
@@ -46,7 +46,7 @@ create table transaction (
 
  -- Device Table
 
- create table DEVICE (
+ create table device (
   DEVICE_ID int(11) unsigned zerofill not null auto_increment primary key,
   MAC_ID varchar(100) unique,
   BT_CUSTOMER_ID varchar(255),

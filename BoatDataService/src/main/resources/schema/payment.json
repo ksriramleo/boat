@@ -5,11 +5,11 @@
   "description":"make payment transaction",
   "id":"payment",
   "properties": {
-    "customer_account_id": {
+    "bt_customer_id": {
       "type":"string",
-      "description":"customer account id from brain tree"
+      "description":"customer id from brain tree"
     },
-    "customer_token":{
+    "payment_method_token":{
       "type":"string",
       "description":"customer token that came back from brain tree"
     },
