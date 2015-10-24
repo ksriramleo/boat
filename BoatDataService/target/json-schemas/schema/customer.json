@@ -1,0 +1,21 @@
+{
+  "type": "object",
+  "$schema": "http://json-schema/org/draft-04/hyper-schema",
+  "name": "customer",
+  "description": "Customer details",
+  "id": "customer",
+  "properties": {
+    "customer_id": {
+      "type": "number",
+      "description": "customer id generated for each customer"
+    },
+    "bt_customer_id": {
+      "type": "string",
+      "description": "Customer ID created by braintree"
+    },
+    "payment_method_token": {
+      "type": "string",
+      "description": "Payment method token created by braintree against CC provided"
+    }
+  }
+}
