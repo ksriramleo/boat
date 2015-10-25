@@ -9,7 +9,7 @@ import javax.persistence.*;
  */
 @Data
 @Entity
-@Table(name = "transaction" , schema = "iot")
+@Table(name = "transaction" , schema = "boat")
 public class TransactionEntity {
 
     /**
