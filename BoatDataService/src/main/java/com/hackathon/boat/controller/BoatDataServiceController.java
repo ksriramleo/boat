@@ -89,6 +89,7 @@ public class BoatDataServiceController {
     public String createCustomer(@RequestBody String customerOnboardingRequest) {
         String customerResponse = null;
         try {
+            System.out.println(customerOnboardingRequest);
             CustomerOnboarding customerOnboarding = objectMapper.readValue(customerOnboardingRequest, CustomerOnboarding.class);
             CustomerEntity customerEntity = populateCustomerEntity(customerOnboarding);
             DeviceEntity deviceEntity = populateDeviceEntity(customerOnboarding);
@@ -121,6 +122,14 @@ public class BoatDataServiceController {
         return customerResponse;
     }
 
+    @RequestMapping(value = "boat/customer/delete")
+    @ResponseBody
+    public String deleteCustomer() {
+        customerRepository.deleteAll();
+        deviceRepository.deleteAll();
+        return "";
+    }
+
     /**
      * populate customer JSON
      * @param customerEntity
@@ -151,7 +160,7 @@ public class BoatDataServiceController {
      */
     private DeviceEntity populateDeviceEntity(CustomerOnboarding customerOnboarding) {
         DeviceEntity deviceEntity = new DeviceEntity();
-        deviceEntity.setBtCustomerId(customerOnboarding.getDevice().getBtCustomerId());
+        deviceEntity.setBtCustomerId(customerOnboarding.getCustomer().getBtCustomerId());
         deviceEntity.setQuantity(Long.valueOf(customerOnboarding.getDevice().getQuantity()));
         deviceEntity.setItemId(Long.valueOf(customerOnboarding.getDevice().getItemId()));
         deviceEntity.setMacId(customerOnboarding.getDevice().getMacId());
@@ -318,6 +327,7 @@ public class BoatDataServiceController {
     public String makePayment(@RequestBody String paymentRequest) {
         String paymentResponseJSON = null;
         ObjectMapper objectMapper = new ObjectMapper();
+        System.out.println(paymentRequest);
         try {
             Payment payment = objectMapper.readValue(paymentRequest, Payment.class);
             Result<PaymentMethodNonce> paymentMethodNonceResult = gateway.paymentMethodNonce().create(payment.getPaymentMethodToken());
@@ -352,7 +362,7 @@ public class BoatDataServiceController {
     }
     @RequestMapping(value="boat/transaction/create", produces = "application/json", method=RequestMethod.POST)
     public void  saveTransaction(@RequestBody String transactionInfoRequest) {
-        String transactionInfoResponse = null;
+        System.out.println(transactionInfoRequest);
         try {
             TransactionInfo transactionInfo = objectMapper.readValue(transactionInfoRequest, TransactionInfo.class);
             TransactionEntity transactionEntity = populateTransactionEntity(transactionInfo);
