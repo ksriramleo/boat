@@ -39,6 +39,22 @@ public class BoatDataServiceController {
     private DeviceRepository deviceRepository;
 
     /**
+     * Merchant Repository
+     */
+    @Autowired
+    private MerchantRepository merchantRepository;
+
+    /**
+     * Master Merchant Id
+     */
+    private static final String MASTER_MERCHANT = "boatpaymentsolutions";
+
+    /**
+     * BrainTree Gateway
+     */
+    private static final BraintreeGateway gateway = new BraintreeGateway(Environment.SANDBOX, "5zhpcmf7vrg95mzb", "2krv8s7cnc56mxxb", "ccedcb5bb380228cc688c8baa2d8cc44");
+
+    /**
      * Onboard Customer
      * @param customerOnboardingRequest
      * @return
@@ -88,17 +104,6 @@ public class BoatDataServiceController {
         return customerEntity;
 
     }
-
-    /**
-     * Merchant Repository
-     */
-    @Autowired
-    private MerchantRepository merchantRepository;
-
-    /**
-     * BrainTree Gateway
-     */
-    private static final BraintreeGateway gateway = new BraintreeGateway(Environment.SANDBOX, "j7qppkys6zg4qqdr", "dwkmcjgk7xwt6trz", "f5500775a53383cef86a16c8c092f566");
 
     /**
      * This method calls the Braintree API for subMerchant Onboarding and then save the response to database
@@ -169,7 +174,7 @@ public class BoatDataServiceController {
                     .routingNumber(merchantOnboardingRequest.getFunding().getRoutingNumber())
                 .done()
                 .tosAccepted(true)
-                .masterMerchantAccountId("boatpaymentsolutions ")
+                .masterMerchantAccountId(MASTER_MERCHANT)
                 .id("");
         return gateway.merchantAccount().create(merchantAccountRequest);
     }
