@@ -17,6 +17,7 @@ com\boat\dataservice\datatype\Payment.class
 com\boat\dataservice\datatype\Funding$Destination.class
 com\boat\dataservice\datatype\MerchantOnboarding.class
 com\hackathon\boat\repository\DeviceRepository.class
+com\boat\dataservice\datatype\ItemList.class
 com\hackathon\boat\controller\BoatDataServiceController.class
 com\hackathon\boat\config\BoatConfiguration.class
 com\boat\dataservice\datatype\CustomerOnboarding.class
