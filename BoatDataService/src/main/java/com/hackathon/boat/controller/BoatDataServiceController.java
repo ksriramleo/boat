@@ -2,6 +2,9 @@ package com.hackathon.boat.controller;
 
 import com.boat.dataservice.datatype.Customer;
 import com.boat.dataservice.datatype.CustomerOnboarding;
+import com.boat.dataservice.datatype.Device;
+import com.boat.dataservice.datatype.Payment;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hackathon.boat.data.CustomerEntity;
 import com.hackathon.boat.data.DeviceEntity;
@@ -22,6 +25,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * Created by srirkumar on 10/24/2015.
@@ -69,13 +74,54 @@ public class BoatDataServiceController {
             DeviceEntity deviceEntity = populateDeviceEntity(customerOnboarding);
             customerRepository.save(customerEntity);
             deviceRepository.save(deviceEntity);
-            customerOnboarding.getCustomer().setCustomerId(Double.valueOf(customerEntity.getCustomerId()));
+            customerOnboarding.getCustomer().setCustomerId(customerEntity.getCustomerId().toString());
             customerOnboarding.getDevice().setDeviceId(String.valueOf(deviceEntity.getDeviceId()));
             customerResponse = objectMapper.writeValueAsString(customerOnboarding);
         } catch (IOException e) {
             e.printStackTrace();
         }
         return customerResponse;
+    }
+    @RequestMapping(value = "boat/customer/macid/{macId}")
+    @ResponseBody
+    public String getCustomerByMacId(@PathVariable String macId) {
+        String customerResponse = null;
+        DeviceEntity deviceEntity = deviceRepository.findByMacId(macId);
+        CustomerEntity customerEntity = customerRepository.findByBtCustomerId(deviceEntity.getBtCustomerId());
+        Device device = populateDeviceJson(deviceEntity);
+        Customer customer = populateCustomerJson(customerEntity);
+        CustomerOnboarding customerOnboarding = new CustomerOnboarding();
+        customerOnboarding.setCustomer(customer);
+        customerOnboarding.setDevice(device);
+        try {
+            customerResponse = objectMapper.writeValueAsString(customerOnboarding);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return customerResponse;
+    }
+
+    /**
+     * populate customer JSON
+     * @param customerEntity
+     * @return
+     */
+    private Customer populateCustomerJson(CustomerEntity customerEntity) {
+        Customer customer = new Customer();
+        customer.setCustomerId(String.valueOf(customerEntity.getCustomerId()));
+        customer.setBtCustomerId(customerEntity.getBtCustomerId());
+        customer.setPaymentMethodToken(customerEntity.getPaymentMethodToken());
+        return customer;
+    }
+
+    private Device populateDeviceJson(DeviceEntity deviceEntity) {
+        Device device = new Device();
+        device.setDeviceId(String.valueOf(deviceEntity.getDeviceId()));
+        device.setMacId(deviceEntity.getMacId());
+        device.setBtCustomerId(deviceEntity.getBtCustomerId());
+        device.setItemId(String.valueOf(deviceEntity.getItemId()));
+        device.setQuantity(String.valueOf(deviceEntity.getQuantity()));
+        return device;
     }
 
     /**
@@ -177,5 +223,47 @@ public class BoatDataServiceController {
                 .masterMerchantAccountId(MASTER_MERCHANT)
                 .id("");
         return gateway.merchantAccount().create(merchantAccountRequest);
+    }
+
+
+    /**
+     * make payment
+     */
+    @RequestMapping(value = "merchant/payment", produces = "application/json", method = RequestMethod.POST)
+    @ResponseBody
+    public String makePayment(@RequestBody String paymentRequest) {
+        String paymentResponseJSON = null;
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            Payment payment = objectMapper.readValue(paymentRequest, Payment.class);
+            Result<PaymentMethodNonce> paymentMethodNonceResult = gateway.paymentMethodNonce().create(payment.getPaymentMethodToken());
+            TransactionRequest transactionRequest = new TransactionRequest();
+            transactionRequest
+                    .amount(new BigDecimal(payment.getAmount()))
+                    .serviceFeeAmount(new BigDecimal(payment.getServiceFee()))
+                    .merchantAccountId(payment.getSubMerchantId())
+                    .paymentMethodNonce(paymentMethodNonceResult.getTarget().getNonce()).options().submitForSettlement(true).done();
+            Result<com.braintreegateway.Transaction> paymentTransaction = gateway.transaction().sale(transactionRequest);
+
+            if (paymentTransaction != null && paymentTransaction.getErrors() != null) {
+                List<ValidationError> allValidationErrors = paymentTransaction.getErrors().getAllValidationErrors();
+                payment.setResponseDescription(appendValidationErrors(allValidationErrors));
+            } else {
+                payment.setPaymentId(paymentTransaction.getTarget().getId());
+                payment.setResponseAuthorizationCode(paymentTransaction.getTarget().getProcessorAuthorizationCode());
+            }
+            paymentResponseJSON = objectMapper.writeValueAsString(payment);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return paymentResponseJSON;
+    }
+
+    public String appendValidationErrors(List<ValidationError> allValidationErrors) {
+        StringBuffer sb = new StringBuffer();
+        for (ValidationError validationError:allValidationErrors) {
+            sb.append(validationError.getMessage()).append("\n");
+        }
+        return sb.toString();
     }
 }

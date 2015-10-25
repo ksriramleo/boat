@@ -1,6 +1,5 @@
 com\hackathon\boat\repository\CatalogRepository.class
 com\hackathon\boat\repository\CustomerRepository.class
-com\hackathon\boat\repository\ItemEntity.class
 com\hackathon\boat\data\TransactionEntity.class
 com\boat\dataservice\datatype\TransactionInfo$TransactionType.class
 com\hackathon\boat\data\ItemEntity.class
@@ -12,12 +11,14 @@ com\hackathon\boat\repository\TransactionRepository.class
 com\boat\dataservice\datatype\Device.class
 com\boat\dataservice\datatype\Customer.class
 com\boat\dataservice\datatype\TransactionInfo$Status.class
+com\hackathon\boat\repository\ItemRepository.class
 com\hackathon\boat\BoatDataService.class
 com\boat\dataservice\datatype\Payment.class
 com\boat\dataservice\datatype\Funding$Destination.class
 com\boat\dataservice\datatype\MerchantOnboarding.class
 com\hackathon\boat\repository\DeviceRepository.class
 com\hackathon\boat\controller\BoatDataServiceController.class
+com\hackathon\boat\config\BoatConfiguration.class
 com\boat\dataservice\datatype\CustomerOnboarding.class
 com\hackathon\boat\repository\MerchantRepository.class
 com\boat\dataservice\datatype\Patch.class
