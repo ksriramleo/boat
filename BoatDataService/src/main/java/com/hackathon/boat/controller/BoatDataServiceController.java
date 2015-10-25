@@ -164,11 +164,12 @@ public class BoatDataServiceController {
             Result<MerchantAccount> result = createMerchantOnBrainTree(merchantOnboardingRequest);
             if(result != null) {
                 MerchantEntity merchantEntity = new MerchantEntity();
-                merchantEntity.setBusinessName(result.getTarget().getBusinessDetails().getLegalName());
+                merchantEntity.setBusinessName(merchantOnboardingRequest.getBusiness().getLegalName());
                 merchantEntity.setSubMerchantId(result.getTarget().getId());
                 merchantRepository.save(merchantEntity);
+                merchantOnboardingRequest.setId(String.valueOf(result.getTarget().getId()));
             }
-            merchantOnboardingResponseJSON = objectMapper.writeValueAsString(result);
+            merchantOnboardingResponseJSON = objectMapper.writeValueAsString(merchantOnboardingRequest);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -183,41 +184,41 @@ public class BoatDataServiceController {
     private Result<MerchantAccount> createMerchantOnBrainTree(MerchantOnboarding merchantOnboardingRequest) {
         MerchantAccountRequest merchantAccountRequest = new MerchantAccountRequest()
                 .individual()
-                .firstName(merchantOnboardingRequest.getIndividual().getFirstName())
-                .lastName(merchantOnboardingRequest.getIndividual().getLastName())
-                .email(merchantOnboardingRequest.getIndividual().getEmail())
-                .phone(merchantOnboardingRequest.getIndividual().getPhoneNumber())
-                .dateOfBirth(merchantOnboardingRequest.getIndividual().getDateOfBirth())
-                .ssn(merchantOnboardingRequest.getIndividual().getSsn())
-                .address()
-                .streetAddress(merchantOnboardingRequest.getIndividual().getStreetAddress())
-                .locality(merchantOnboardingRequest.getIndividual().getLocality())
-                .region(merchantOnboardingRequest.getIndividual().getRegion())
-                .postalCode(merchantOnboardingRequest.getIndividual().getPostalCode())
-                .done()
+                    .firstName(merchantOnboardingRequest.getIndividual().getFirstName())
+                    .lastName(merchantOnboardingRequest.getIndividual().getLastName())
+                    .email(merchantOnboardingRequest.getIndividual().getEmail())
+                    .phone(merchantOnboardingRequest.getIndividual().getPhoneNumber())
+                    .dateOfBirth(merchantOnboardingRequest.getIndividual().getDateOfBirth())
+                    .ssn(merchantOnboardingRequest.getIndividual().getSsn())
+                    .address()
+                        .streetAddress(merchantOnboardingRequest.getIndividual().getStreetAddress())
+                        .locality(merchantOnboardingRequest.getIndividual().getLocality())
+                        .region(merchantOnboardingRequest.getIndividual().getRegion())
+                        .postalCode(merchantOnboardingRequest.getIndividual().getPostalCode())
+                    .done()
                 .done()
                 .business()
-                .legalName(merchantOnboardingRequest.getBusiness().getLegalName())
-                .dbaName(merchantOnboardingRequest.getBusiness().getDbaName())
-                .taxId(merchantOnboardingRequest.getBusiness().getTaxId())
-                .address()
-                .streetAddress(merchantOnboardingRequest.getBusiness().getStreetAddress())
-                .locality(merchantOnboardingRequest.getBusiness().getLocality())
-                .region(merchantOnboardingRequest.getBusiness().getRegion())
-                .postalCode(merchantOnboardingRequest.getBusiness().getPostalCode())
-                .done()
+                    .legalName(merchantOnboardingRequest.getBusiness().getLegalName())
+                    .dbaName(merchantOnboardingRequest.getBusiness().getDbaName())
+                    .taxId(merchantOnboardingRequest.getBusiness().getTaxId())
+                    .address()
+                        .streetAddress(merchantOnboardingRequest.getBusiness().getStreetAddress())
+                        .locality(merchantOnboardingRequest.getBusiness().getLocality())
+                        .region(merchantOnboardingRequest.getBusiness().getRegion())
+                        .postalCode(merchantOnboardingRequest.getBusiness().getPostalCode())
+                    .done()
                 .done()
                 .funding()
-                .descriptor(merchantOnboardingRequest.getFunding().getDescriptor())
-                .destination(MerchantAccount.FundingDestination.valueOf(merchantOnboardingRequest.getFunding().getDestination().toString()))
-                .email(merchantOnboardingRequest.getFunding().getEmail())
-                .mobilePhone(merchantOnboardingRequest.getFunding().getMobilePhone())
-                .accountNumber(merchantOnboardingRequest.getFunding().getAccountNumber())
-                .routingNumber(merchantOnboardingRequest.getFunding().getRoutingNumber())
+                    .descriptor(merchantOnboardingRequest.getFunding().getDescriptor())
+                    .destination(MerchantAccount.FundingDestination.valueOf(merchantOnboardingRequest.getFunding().getDestination().name()))
+                    .email(merchantOnboardingRequest.getFunding().getEmail())
+                    .mobilePhone(merchantOnboardingRequest.getFunding().getMobilePhone())
+                    .accountNumber(merchantOnboardingRequest.getFunding().getAccountNumber())
+                    .routingNumber(merchantOnboardingRequest.getFunding().getRoutingNumber())
                 .done()
                 .tosAccepted(true)
-                .masterMerchantAccountId("pappustore")
-                .id("Store_1");
+                .masterMerchantAccountId("boatpaymentsolutions ")
+                .id("");
         return gateway.merchantAccount().create(merchantAccountRequest);
     }
 
