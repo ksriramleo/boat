@@ -7,9 +7,12 @@ import com.boat.dataservice.datatype.Device;
 import com.boat.dataservice.datatype.Payment;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hackathon.boat.data.CatalogEntity;
 import com.hackathon.boat.data.CustomerEntity;
 import com.hackathon.boat.data.DeviceEntity;
+import com.hackathon.boat.data.ItemEntity;
 import com.hackathon.boat.data.TransactionEntity;
+import com.hackathon.boat.repository.CatalogRepository;
 import com.hackathon.boat.repository.CustomerRepository;
 import com.hackathon.boat.repository.DeviceRepository;
 import com.hackathon.boat.repository.ItemRepository;
@@ -54,6 +57,9 @@ public class BoatDataServiceController {
     @Autowired
     private MerchantRepository merchantRepository;
 
+
+    @Autowired
+    private CatalogRepository catalogRepository;
     /**
      * Item Repository
      */
@@ -239,6 +245,70 @@ public class BoatDataServiceController {
         return gateway.merchantAccount().create(merchantAccountRequest);
     }
 
+    /**
+     * Return catalog by item upc
+     */
+    @RequestMapping(value = "boat/catalog/{itemUpc}", produces = "application/json", method = RequestMethod.GET)
+    @ResponseBody
+    public String getItemCatalog(@PathVariable String itemUpc) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        String itemCatalogJSON = null;
+        try {
+            List<CatalogEntity> catalogEntityList = catalogRepository.findByItemUpc(itemUpc);
+            List<Catalog> catalogList = new ArrayList<Catalog>();
+            for (CatalogEntity catalogEntity : catalogEntityList) {
+                Catalog catalog = new Catalog();
+                catalog.setSubMerchantId(String.valueOf(catalogEntity.getSubMerchantId()));
+                catalog.setItemUpc(catalogEntity.getItemUpc());
+                catalog.setAvailability(catalogEntity.getAvailability());
+                catalog.setPrice(String.valueOf(catalogEntity.getPrice()));
+                catalog.setQuantity(String.valueOf(catalogEntity.getQuantity()));
+                catalogList.add(catalog);
+            }
+            itemCatalogJSON = objectMapper.writeValueAsString(catalogList);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return itemCatalogJSON;
+    }
+
+    /**
+     * Return item details
+     */
+    @RequestMapping(value = "boat/items", produces = "application/json", method = RequestMethod.GET)
+    @ResponseBody
+    public ItemList getItemList() {
+        ItemList items = new ItemList();
+        List<ItemEntity> itemEntityList = (List<ItemEntity>) itemRepository.findAll();
+        List<Item> itemList = new ArrayList<Item>();
+
+        for (ItemEntity itemEntity : itemEntityList) {
+            Item item = new Item();
+            item.setItemId(String.valueOf(itemEntity.getItemId()));
+            item.setItemName(itemEntity.getItemName());
+            item.setItemUpc(itemEntity.getItemUpc());
+            item.setItemDesc(itemEntity.getItemDesc());
+            itemList.add(item);
+        }
+        items.setItemList(itemList);
+
+        return items;
+    }
+
+    /**
+     * Return item details by item id
+     */
+    @RequestMapping(value = "boat/item/{itemId}", produces = "application/json", method = RequestMethod.GET)
+    @ResponseBody
+    public Item getItemDetails(@PathVariable String itemId) {
+        ItemEntity itemEntity = itemRepository.findOne(Long.valueOf(itemId));
+        Item item = new Item();
+        item.setItemId(String.valueOf(itemEntity.getItemId()));
+        item.setItemName(itemEntity.getItemName());
+        item.setItemUpc(itemEntity.getItemUpc());
+        item.setItemDesc(itemEntity.getItemDesc());
+        return item;
+    }
 
     /**
      * make payment
