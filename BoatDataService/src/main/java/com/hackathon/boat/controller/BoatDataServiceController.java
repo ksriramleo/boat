@@ -194,12 +194,15 @@ public class BoatDataServiceController {
         try {
             MerchantOnboarding merchantOnboardingRequest = objectMapper.readValue(request, MerchantOnboarding.class);
             Result<MerchantAccount> result = createMerchantOnBrainTree(merchantOnboardingRequest);
-            if(result != null) {
+            if(result.getErrors() == null) {
+                merchantOnboardingRequest.setStatus("success");
                 MerchantEntity merchantEntity = new MerchantEntity();
                 merchantEntity.setBusinessName(merchantOnboardingRequest.getBusiness().getLegalName());
                 merchantEntity.setSubMerchantId(result.getTarget().getId());
                 merchantRepository.save(merchantEntity);
                 merchantOnboardingRequest.setId(String.valueOf(result.getTarget().getId()));
+            } else {
+                merchantOnboardingRequest.setStatus("failed");
             }
             merchantOnboardingResponseJSON = objectMapper.writeValueAsString(merchantOnboardingRequest);
         } catch (IOException e) {

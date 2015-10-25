@@ -349,7 +349,8 @@ public class TransactionInfo {
     public static enum Status {
 
         IN_PROGRESS("in-progress"),
-        COMPLETE("complete");
+        COMPLETE("complete"),
+        FAILED("failed");
         private final String value;
         private static Map<String, TransactionInfo.Status> constants = new HashMap<String, TransactionInfo.Status>();
 

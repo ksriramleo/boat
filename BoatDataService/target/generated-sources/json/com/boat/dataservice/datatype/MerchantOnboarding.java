@@ -26,7 +26,8 @@ import org.apache.commons.lang.builder.ToStringBuilder;
     "individual",
     "business",
     "funding",
-    "id"
+    "id",
+    "status"
 })
 public class MerchantOnboarding {
 
@@ -52,6 +53,12 @@ public class MerchantOnboarding {
      */
     @JsonProperty("id")
     private String id;
+    /**
+     * SUCCESS or FAILED
+     * 
+     */
+    @JsonProperty("status")
+    private String status;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
@@ -186,6 +193,33 @@ public class MerchantOnboarding {
         return this;
     }
 
+    /**
+     * SUCCESS or FAILED
+     * 
+     * @return
+     *     The status
+     */
+    @JsonProperty("status")
+    public String getStatus() {
+        return status;
+    }
+
+    /**
+     * SUCCESS or FAILED
+     * 
+     * @param status
+     *     The status
+     */
+    @JsonProperty("status")
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public MerchantOnboarding withStatus(String status) {
+        this.status = status;
+        return this;
+    }
+
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
@@ -208,7 +242,7 @@ public class MerchantOnboarding {
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder().append(merchantId).append(individual).append(business).append(funding).append(id).append(additionalProperties).toHashCode();
+        return new HashCodeBuilder().append(merchantId).append(individual).append(business).append(funding).append(id).append(status).append(additionalProperties).toHashCode();
     }
 
     @Override
@@ -220,7 +254,7 @@ public class MerchantOnboarding {
             return false;
         }
         MerchantOnboarding rhs = ((MerchantOnboarding) other);
-        return new EqualsBuilder().append(merchantId, rhs.merchantId).append(individual, rhs.individual).append(business, rhs.business).append(funding, rhs.funding).append(id, rhs.id).append(additionalProperties, rhs.additionalProperties).isEquals();
+        return new EqualsBuilder().append(merchantId, rhs.merchantId).append(individual, rhs.individual).append(business, rhs.business).append(funding, rhs.funding).append(id, rhs.id).append(status, rhs.status).append(additionalProperties, rhs.additionalProperties).isEquals();
     }
 
 }

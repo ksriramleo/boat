@@ -148,6 +148,10 @@
     "id": {
       "type": "string",
       "description": "Specifies the ID of the Sub Merchant's account, which can be referenced when creating transactions with service fees. Max 32 characters; must be unique, cannot be 'all' or 'new', and must contain only letters, numbers, _ and -. If not provided, Braintree will automatically generate one."
+    },
+    "status": {
+      "type": "string",
+      "description": "SUCCESS or FAILED"
     }
   }
 }

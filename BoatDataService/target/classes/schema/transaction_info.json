@@ -41,7 +41,8 @@
       "required": true,
       "enum": [
         "in-progress",
-        "complete"
+        "complete",
+        "failed"
       ]
     },
     "session_id": {
