@@ -10,4 +10,6 @@ import javax.transaction.Transactional;
  */
 @Transactional
 public interface DeviceRepository extends CrudRepository <DeviceEntity, Long>{
+
+    public DeviceEntity findByMacId(String macId);
 }

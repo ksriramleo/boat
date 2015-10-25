@@ -6,7 +6,7 @@
   "id": "customer",
   "properties": {
     "customer_id": {
-      "type": "number",
+      "type": "string",
       "description": "customer id generated for each customer"
     },
     "bt_customer_id": {
