@@ -44,7 +44,7 @@ public class TransactionEntity {
     /**
      * Merchant Id
      */
-    @Column(name = "SUB_MERCHNAT_ID",
+    @Column(name = "SUB_MERCHANT_ID",
             nullable = true,
             insertable = true,
             updatable = false,

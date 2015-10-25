@@ -4,12 +4,15 @@ import com.boat.dataservice.datatype.Customer;
 import com.boat.dataservice.datatype.CustomerOnboarding;
 import com.boat.dataservice.datatype.Device;
 import com.boat.dataservice.datatype.Payment;
+import com.boat.dataservice.datatype.TransactionInfo;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hackathon.boat.data.CustomerEntity;
 import com.hackathon.boat.data.DeviceEntity;
+import com.hackathon.boat.data.TransactionEntity;
 import com.hackathon.boat.repository.CustomerRepository;
 import com.hackathon.boat.repository.DeviceRepository;
+import com.hackathon.boat.repository.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,6 +46,9 @@ public class BoatDataServiceController {
     @Autowired
     private DeviceRepository deviceRepository;
 
+    @Autowired
+    private TransactionRepository transactionRepository;
+
     /**
      * Onboard Customer
      * @param customerOnboardingRequest
@@ -52,6 +58,7 @@ public class BoatDataServiceController {
     @ResponseBody
     public String createCustomer(@RequestBody String customerOnboardingRequest) {
         String customerResponse = null;
+        System.out.println(customerOnboardingRequest);
         try {
             CustomerOnboarding customerOnboarding = objectMapper.readValue(customerOnboardingRequest, CustomerOnboarding.class);
             CustomerEntity customerEntity = populateCustomerEntity(customerOnboarding);
@@ -262,5 +269,30 @@ public class BoatDataServiceController {
             sb.append(validationError.getMessage()).append("\n");
         }
         return sb.toString();
+    }
+    @RequestMapping(value="boat/transaction/create", produces = "application/json", method=RequestMethod.POST)
+    public void  saveTransaction(@RequestBody String transactionInfoRequest) {
+        String transactionInfoResponse = null;
+        try {
+            TransactionInfo transactionInfo = objectMapper.readValue(transactionInfoRequest, TransactionInfo.class);
+            TransactionEntity transactionEntity = populateTransactionEntity(transactionInfo);
+            transactionRepository.save(transactionEntity);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private TransactionEntity populateTransactionEntity(TransactionInfo transactionInfo) {
+        TransactionEntity transactionEntity = new TransactionEntity();
+        transactionEntity.setBtCustomerId(transactionInfo.getBtCustomerId());
+        transactionEntity.setAmount(Double.valueOf(transactionInfo.getAmount()));
+        transactionEntity.setItemUpc(transactionInfo.getItemUpc());
+        transactionEntity.setSessionId(transactionInfo.getSessionId());
+        transactionEntity.setTransactionId(transactionInfo.getTransactionId());
+        transactionEntity.setStatus(transactionInfo.getStatus().toString());
+        transactionEntity.setTransactionType(transactionInfo.getTransactionType().toString());
+        transactionEntity.setSubMerchantId(transactionInfo.getSubMerchantId());
+        return transactionEntity;
     }
 }
