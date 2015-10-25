@@ -1,0 +1,17 @@
+{
+  "type": "object",
+  "$schema": "http://json-schema/org/draft-04/hyper-schema",
+  "name": "itemlist",
+  "description": "item list",
+  "id": "itemslist",
+  "properties": {
+    "item_list": {
+      "description": "List Of Items",
+      "type": "array",
+      "additionalItems": false,
+      "items": {
+        "$ref": "item.json"
+      }
+    }
+  }
+}

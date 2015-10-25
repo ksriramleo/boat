@@ -33,7 +33,7 @@ public class Customer {
      * 
      */
     @JsonProperty("customer_id")
-    private Double customerId;
+    private String customerId;
     /**
      * Customer ID created by braintree
      * 
@@ -56,7 +56,7 @@ public class Customer {
      *     The customerId
      */
     @JsonProperty("customer_id")
-    public Double getCustomerId() {
+    public String getCustomerId() {
         return customerId;
     }
 
@@ -67,11 +67,11 @@ public class Customer {
      *     The customer_id
      */
     @JsonProperty("customer_id")
-    public void setCustomerId(Double customerId) {
+    public void setCustomerId(String customerId) {
         this.customerId = customerId;
     }
 
-    public Customer withCustomerId(Double customerId) {
+    public Customer withCustomerId(String customerId) {
         this.customerId = customerId;
         return this;
     }

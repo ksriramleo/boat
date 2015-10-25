@@ -1,10 +1,10 @@
 package com.hackathon.boat.controller;
 
+import com.boat.dataservice.datatype.*;
 import com.boat.dataservice.datatype.Customer;
 import com.boat.dataservice.datatype.CustomerOnboarding;
 import com.boat.dataservice.datatype.Device;
 import com.boat.dataservice.datatype.Payment;
-import com.boat.dataservice.datatype.TransactionInfo;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hackathon.boat.data.CustomerEntity;
@@ -12,6 +12,7 @@ import com.hackathon.boat.data.DeviceEntity;
 import com.hackathon.boat.data.TransactionEntity;
 import com.hackathon.boat.repository.CustomerRepository;
 import com.hackathon.boat.repository.DeviceRepository;
+import com.hackathon.boat.repository.ItemRepository;
 import com.hackathon.boat.repository.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,6 +30,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -46,8 +48,30 @@ public class BoatDataServiceController {
     @Autowired
     private DeviceRepository deviceRepository;
 
+    /**
+     * Merchant Repository
+     */
+    @Autowired
+    private MerchantRepository merchantRepository;
+
+    /**
+     * Item Repository
+     */
+    @Autowired
+    private ItemRepository itemRepository;
+
     @Autowired
     private TransactionRepository transactionRepository;
+
+    /**
+     * Master Merchant Id
+     */
+    private static final String MASTER_MERCHANT = "boatpaymentsolutions";
+
+    /**
+     * BrainTree Gateway
+     */
+    private static final BraintreeGateway gateway = new BraintreeGateway(Environment.SANDBOX, "5zhpcmf7vrg95mzb", "2krv8s7cnc56mxxb", "ccedcb5bb380228cc688c8baa2d8cc44");
 
     /**
      * Onboard Customer
@@ -58,7 +82,6 @@ public class BoatDataServiceController {
     @ResponseBody
     public String createCustomer(@RequestBody String customerOnboardingRequest) {
         String customerResponse = null;
-        System.out.println(customerOnboardingRequest);
         try {
             CustomerOnboarding customerOnboarding = objectMapper.readValue(customerOnboardingRequest, CustomerOnboarding.class);
             CustomerEntity customerEntity = populateCustomerEntity(customerOnboarding);
@@ -141,19 +164,6 @@ public class BoatDataServiceController {
         return customerEntity;
 
     }
-
-    /**
-     * Merchant Repository
-     */
-    @Autowired
-    private MerchantRepository merchantRepository;
-
-    /**
-     * BrainTree Gateway
-     */
-    private static final BraintreeGateway gateway = new BraintreeGateway(Environment.SANDBOX, "3gjxkqn9j4gvkwv8",
-            "cbx62tfstsdnjr45",
-            "7e4a4983f78893d6cd49db5aa0763b8a");
 
     /**
      * This method calls the Braintree API for subMerchant Onboarding and then save the response to database
